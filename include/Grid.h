@@ -14,7 +14,7 @@ public:
     uint64_t sizeX() const;
     uint64_t sizeY() const;
 
-    bool inside(uint64_t x, uint64_t y);
+    bool inside(uint64_t x, uint64_t y) const;
 
     uint64_t index(uint64_t x, uint64_t y) const;
 };

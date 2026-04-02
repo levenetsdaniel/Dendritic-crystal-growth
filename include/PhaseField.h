@@ -7,6 +7,8 @@ public:
     PhaseField(uint64_t nx, uint64_t ny, double dx, double dy, double initValue = 0.0);
 
     void initializeSeed(uint64_t cx, uint64_t cy, double radius);
+
+    void UpdateField(double dt);
 };
 
 #endif //CRYSTAL_PHASEFIELD_H

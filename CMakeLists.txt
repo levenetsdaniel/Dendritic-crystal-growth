@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include)
 
-set(SRC src/Grid.cpp src/Field.cpp src/PhaseField.cpp src/TemperatureField.cpp)
+set(SRC src/Grid.cpp src/Field.cpp src/PhaseField.cpp src/TemperatureField.cpp
+        src/MathFunctions.cpp)
 
 add_executable(main ${SRC})
 

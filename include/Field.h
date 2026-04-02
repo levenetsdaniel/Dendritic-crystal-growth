@@ -7,6 +7,8 @@
 class Field: public Grid{
 protected:
     std::vector<double> data;
+    std::vector<double> prev_data;
+
 public:
     Field(uint64_t nx, uint64_t ny, double dx, double dy, double initValue = 0.0);
 
