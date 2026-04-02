@@ -1,0 +1,8 @@
+//
+// Created by aleksei on 02.04.2026.
+//
+
+#ifndef CRYSTAL_MATHFUNCTIONS_H
+#define CRYSTAL_MATHFUNCTIONS_H
+
+#endif //CRYSTAL_MATHFUNCTIONS_H

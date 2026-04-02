@@ -10,7 +10,7 @@ uint64_t Grid::sizeY() const {
     return ny;
 }
 
-bool Grid::inside(uint64_t x, uint64_t y) {
+bool Grid::inside(uint64_t x, uint64_t y) const {
     return x < nx && y < ny;
 }
 
