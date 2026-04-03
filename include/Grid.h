@@ -6,10 +6,9 @@
 class Grid {
 protected:
     uint64_t nx, ny;
-    double dx, dy;
 
 public:
-    Grid(uint64_t nx, uint64_t ny, double dx, double dy);
+    Grid(uint64_t nx, uint64_t ny);
 
     uint64_t sizeX() const;
     uint64_t sizeY() const;

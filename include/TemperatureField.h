@@ -1,11 +1,13 @@
 #ifndef CRYSTAL_TEMPERATUREFIELD_H
 #define CRYSTAL_TEMPERATUREFIELD_H
 #include "Field.h"
-#include "PhaseField.h"
+#include "MaterialsParametrs.h"
+
+class PhaseField;
 
 class TemperatureField: public Field {
 public:
-    TemperatureField(uint64_t nx, uint64_t ny, double dx, double dy, double initValue = 273.0);
+    TemperatureField(const Parameters& p, uint64_t nx, uint64_t ny, double initValue = -15.0);
 
     void applyBoundaryConditions();
 

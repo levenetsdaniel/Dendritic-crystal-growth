@@ -3,16 +3,20 @@
 #include <vector>
 
 #include "Grid.h"
+#include "MaterialsParametrs.h"
 
 class Field: public Grid{
 protected:
     std::vector<double> data;
     std::vector<double> prev_data;
+    Parameters p;
 
 public:
-    Field(uint64_t nx, uint64_t ny, double dx, double dy, double initValue = 0.0);
+    Field(const Parameters& p, uint64_t nx, uint64_t ny, double initValue);
 
-    double get(uint64_t x, uint64_t y) const;
+    double at(uint64_t x, uint64_t y) const;
+
+    double prev_at(uint64_t x, uint64_t y) const;
 
     void set(uint64_t x, uint64_t y, double value);
 

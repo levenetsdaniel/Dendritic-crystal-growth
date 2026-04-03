@@ -1,10 +1,14 @@
 #include "Field.h"
 
-Field::Field(uint64_t nx, uint64_t ny, double dx, double dy, double initValue):
-    Grid(nx, ny, dx, dy), data(nx * ny, initValue) {}
+Field::Field(const Parameters& p, uint64_t nx, uint64_t ny, double initValue):
+    Grid(nx, ny), p(p), data(nx * ny, initValue), prev_data(nx * ny, initValue) {}
 
-double Field::get(uint64_t x, uint64_t y) const {
+double Field::at(uint64_t x, uint64_t y) const {
     return data.at(index(x, y));
+}
+
+double Field::prev_at(uint64_t x, uint64_t y) const {
+    return prev_data.at(index(x, y));
 }
 
 void Field::set(uint64_t x,  uint64_t y, double value) {

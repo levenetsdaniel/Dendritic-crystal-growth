@@ -1,6 +1,6 @@
 #include "Grid.h"
 
-Grid::Grid(uint64_t nx, uint64_t ny, double dx, double dy): nx(nx), ny(ny), dx(dx), dy(dy) {}
+Grid::Grid(uint64_t nx, uint64_t ny): nx(nx), ny(ny){}
 
 uint64_t Grid::sizeX() const {
     return nx;
