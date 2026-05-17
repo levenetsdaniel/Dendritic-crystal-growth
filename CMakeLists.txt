@@ -1,24 +1,23 @@
-cmake_minimum_required(VERSION 3.5)
-project(crystal)
+cmake_minimum_required(VERSION 3.16)
+project(crystal CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
-include_directories(include)
+find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+find_package(OpenMP REQUIRED)
 
-find_package(SFML REQUIRED COMPONENTS Graphics Window System)
+file(GLOB SOURCES "src/*.cpp")
 
-set(SRC src/main.cpp src/Grid.cpp src/Field.cpp src/PhaseField.cpp src/TemperatureField.cpp
-        src/MathFunctions.cpp include/FieldRender.hpp)
+add_executable(crystal ${SOURCES})
 
-add_executable(crystal ${SRC})
+target_include_directories(crystal PRIVATE include)
 
-target_include_directories(crystal PRIVATE
-        include
-        /opt/homebrew/Cellar/sfml/3.0.2/include
-)
-
-target_link_libraries(crystal
+target_link_libraries(crystal PRIVATE
         SFML::Graphics
         SFML::Window
         SFML::System
+        OpenMP::OpenMP_CXX
 )

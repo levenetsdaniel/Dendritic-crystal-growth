@@ -2,39 +2,34 @@
 #define CRYSTAL_MATERIALSPARAMETRS_H
 
 struct Parameters {
-    double dx = 0.1;
-    double dy = 0.1;
+    // Сетка
+    double dx = 0.1, dy = 0.1;
+    double dt = 0.00005;
 
-    double dt = 5e-5;
+    // Фазовое поле
+    double M     = 1.0;
+    double W     = 0.3;
 
-    // Phase field mobility (ОЧЕНЬ важно уменьшить)
-    double M = 0.15;
+    // Тепло
+    double D     = 1.0;    // термодиффузия
+    double Cp    = 1.0;
+    double L     = 0.5;    // скрытая теплота
 
-    double a = 1.0;
+    // Анизотропия
+    double eps   = 0.05;   // сила анизотропии
+    double delta = 4.0;    // режим симметрии
 
-    // интерфейсная энергия — уменьшена
-    double W = 0.3;
+    double alpha = 0.9;
+    double gamma = 10.0;
 
-    // теплопроводность
-    double D = 0.2;
+    // Температура
+    double Tm     = 1.0;   // температура плавления
+    double T_init = 0.55;  // начальная температура расплава
 
-    // связь фазы и температуры — ослаблена
-    double df = 0.2;
 
-    double kappa = 1.0;
-    double Cp = 1.0;
+    double noise  = 0.01;
 
-    // скрытая теплота — уменьшена
-    double L = 0.08;
-
-    // анизотропия — сильно уменьшена
-    double eps = 0.03;
-    double delta = 4;
-
-    double Tm = 0.0;
-
-    // шум почти убран (критично!)
-    double noise = 0.0002;
+    double dla_sensitivity = 3.0;
 };
 
-#endif //CRYSTAL_MATERIALSPARAMETRS_H
+#endif

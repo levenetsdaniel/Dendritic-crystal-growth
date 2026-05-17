@@ -12,6 +12,8 @@ public:
     void initializeSeed(uint64_t cx, uint64_t cy, double radius, TemperatureField& field);
 
     void UpdateField(double dt, TemperatureField& field);
+
+    void RunDLAStep(const TemperatureField& Tfield, int particles_count = 1);
 };
 
 #endif //CRYSTAL_PHASEFIELD_H
