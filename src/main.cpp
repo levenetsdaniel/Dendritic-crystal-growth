@@ -1,43 +1,44 @@
-#include "FieldRender.hpp"
+#include "FieldRender.h"
 #include "PhaseField.h"
 #include "TemperatureField.h"
 #include <iostream>
 
 int main() {
     Parameters p;
+    p.eps4       = -0.05;
+    p.Delta      = 0.75;
+    p.dt_safety  = 0.08;
+    p.noise_amp  = 0.0;
 
-    PhaseField       field(p, 800, 800, 0.0);
-    TemperatureField Tfield(p, 800, 800, p.T_init);
-    FieldRenderer    renderer(800, 800, 1);
-    field.initializeSeed(400, 400, 5, Tfield);
+    const uint64_t N = 1600;
 
-//     std::cout << "phi center:      " << field.at(300, 300) << std::endl;
-//     std::cout << "phi seed edge:   " << field.at(315, 300) << std::endl;
-//     std::cout << "T inside seed:   " << Tfield.at(300, 300) << std::endl;
-//     std::cout << "T outside seed:  " << Tfield.at(325, 300) << std::endl;
+    PhaseField field(p, N, N);
+    TemperatureField Tfield(p, N, N);
+    FieldRenderer renderer(N, N, 0.5f);
 
+    field.initializeSeed(N / 2, N / 2, 6.0, Tfield);
+
+    std::cout << "=== Karma-Rappel phase-field for SCN ===\n"
+            << "  W0/d0    = " << p.W0_over_d0 << "\n"
+            << "  dx/W0    = " << p.dx_over_W0 << "\n"
+            << "  lambda   = " << p.lambda() << "\n"
+            << "  D~       = " << p.D_tilde() << "\n"
+            << "  dt (~)   = " << p.dt() << "\n"
+            << "  Delta    = " << p.Delta << "\n"
+            << "  tau0     = " << p.tau0() << " s\n"
+            << "  W0       = " << p.W0() << " cm\n"
+            << std::endl;
 
     int frame = 0;
     while (renderer.isOpen()) {
         renderer.handleEvents();
 
-        if (frame % 20 == 0) {
-            field.RunDLAStep(Tfield, 2);
-        }
+        field.UpdateField(p.dt(), Tfield);
+        Tfield.updataeTemperatureField(p.dt(), field);
 
-        field.UpdateField(p.dt, Tfield);
-        Tfield.updataeTemperatureField(p.dt, field);
-
-        if (frame % 10 == 0)
+        if (frame % 50 == 0)
             renderer.render(field);
 
-        if (frame % 500 == 0) {
-            std::cout << "frame " << frame
-                    << " | phi axis:  " << field.at(320, 300)
-                    << " | T front:   " << Tfield.at(320, 300)
-                    << " | T center:  " << Tfield.at(300, 300)
-                    << std::endl;
-        }
         frame++;
     }
     return 0;
