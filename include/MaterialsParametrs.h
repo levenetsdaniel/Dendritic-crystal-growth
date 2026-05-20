@@ -30,16 +30,16 @@ struct Parameters {
     // Физическая ширина интерфейса, см
     double W0() const { return W0_over_d0 * d0; }
 
-    // Безразмерная константа связи (главный управляющий параметр)
-    double lambda() const { return a1 * W0_over_d0; } // = a1 * W0/d0
+    // Безразмерная константа связи
+    double lambda() const { return a1 * W0_over_d0; }
 
     // Характерное время релаксации фазового поля, с
     double tau0() const { return a2 * lambda() * W0() * W0() / D; }
 
-    // Безразмерная диффузия, D~ = D * tau0 / W0^2 = a2 * lambda
+    // Безразмерная диффузия
     double D_tilde() const { return a2 * lambda(); }
 
-    // Шаги сетки и времени (БЕЗРАЗМЕРНЫЕ, в единицах W0 и tau0)
+    // Шаги сетки и времени
     double dx() const { return dx_over_W0; }
     double dy() const { return dx_over_W0; }
 

@@ -3,12 +3,12 @@
 #include <algorithm>
 
 FieldRenderer::FieldRenderer(std::uint64_t nx, std::uint64_t ny, float scale)
-        : nx(nx), ny(ny), scale(scale),
-          window(sf::VideoMode({
-                                       static_cast<unsigned>(nx * scale),
-                                       static_cast<unsigned>(ny * scale)
-                               }),
-                 "Phase Field (Karma-Rappel)") {
+    : nx(nx), ny(ny), scale(scale),
+      window(sf::VideoMode({
+                 static_cast<unsigned>(nx * scale),
+                 static_cast<unsigned>(ny * scale)
+             }),
+             "Phase Field (Karma-Rappel)") {
     image.resize({static_cast<unsigned>(nx), static_cast<unsigned>(ny)}, sf::Color::Black);
     window.setFramerateLimit(60);
 }
@@ -22,7 +22,7 @@ void FieldRenderer::handleEvents() {
     }
 }
 
-void FieldRenderer::render(const PhaseField& field) {
+void FieldRenderer::render(const PhaseField &field) {
     for (std::uint64_t i = 0; i < nx; ++i) {
         for (std::uint64_t j = 0; j < ny; ++j) {
             const float phi = std::clamp(field.at(i, j), -1.0f, 1.0f);
@@ -33,7 +33,7 @@ void FieldRenderer::render(const PhaseField& field) {
     }
 
     sf::Texture texture(image);
-    sf::Sprite  sprite(texture);
+    sf::Sprite sprite(texture);
     sprite.setScale({scale, scale});
 
     window.clear();
