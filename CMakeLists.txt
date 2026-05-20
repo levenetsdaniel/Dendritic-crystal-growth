@@ -22,6 +22,10 @@ target_link_libraries(crystal PRIVATE
         SFML::System
 )
 
+target_compile_definitions(crystal PRIVATE
+        PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}"
+)
+
 set_target_properties(crystal PROPERTIES
         VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )

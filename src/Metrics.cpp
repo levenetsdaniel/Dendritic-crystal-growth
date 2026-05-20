@@ -13,7 +13,7 @@ Metrics::Metrics(const Parameters& p)
             + "_"
             + timestamp();
 
-    run_dir_ = std::filesystem::path("runs") / run_id_;
+    run_dir_ = std::filesystem::path(PROJECT_ROOT_DIR) / "runs" / run_id_;
 
     std::filesystem::create_directories(run_dir_);
     std::filesystem::create_directories(run_dir_ / "frames");
