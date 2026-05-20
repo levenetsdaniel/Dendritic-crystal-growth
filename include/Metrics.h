@@ -8,8 +8,6 @@
 #include <cmath>
 #include <chrono>
 #include <ctime>
-#include <iomanip>
-#include <sstream>
 
 
 class Metrics {
@@ -17,6 +15,7 @@ class Metrics {
     std::string run_id_;
     std::chrono::steady_clock::time_point startTime_;
     std::string timestamp() const;
+    std::filesystem::path run_dir_;
 public:
     Metrics(const Parameters&);
     void record(int step, int frame, const PhaseField&, const TemperatureField&);

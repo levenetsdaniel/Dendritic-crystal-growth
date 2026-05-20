@@ -22,6 +22,10 @@ target_link_libraries(crystal PRIVATE
         SFML::System
 )
 
+set_target_properties(crystal PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
 if(UNIX AND NOT APPLE)
     find_package(OpenMP REQUIRED)
     target_link_libraries(crystal PRIVATE OpenMP::OpenMP_CXX)

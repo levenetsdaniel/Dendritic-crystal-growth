@@ -1,5 +1,7 @@
 #include "Metrics.h"
-
+#include <iomanip>
+#include <sstream>
+#include <filesystem>
 
 Metrics::Metrics(const Parameters& p)
 {
@@ -11,9 +13,14 @@ Metrics::Metrics(const Parameters& p)
             + "_"
             + timestamp();
 
-    csv_.open(run_id_ + ".csv");
+    run_dir_ = std::filesystem::path("runs") / run_id_;
 
-    csv_ << "step,sim_time,wall_time,area,radius,T_interface\n";
+    std::filesystem::create_directories(run_dir_);
+    std::filesystem::create_directories(run_dir_ / "frames");
+
+    csv_.open((run_dir_ / "metrics.csv").string());
+
+    csv_ << "step,wall_time,area,radius,T_interface\n";
 
     startTime_ = std::chrono::steady_clock::now();
 }
@@ -59,19 +66,21 @@ void Metrics::record(int step, int interval, const PhaseField& Pfield, const Tem
              << wallTime << ","
              << area << ","
              << std::sqrt(area / M_PI) << ","
-             << T_sum / T_cnt
+             << (T_cnt ? T_sum / T_cnt : 0.0)
              << "\n";
+
+        csv_.flush();
     }
 }
-void Metrics::saveImage(int step, int interval, const FieldRenderer& FRenderer) {
-    if (step % interval == 0) {
-        std::string filename =
-                run_id_
-                + "_frame_"
-                + std::to_string(step)
-                + ".png";
-        if (!FRenderer.getImage().saveToFile(filename)) {
-            std::cerr << "Failed to save image\n";
-        }
+void Metrics::saveImage(int step, int interval, const FieldRenderer& FRenderer)
+{
+    if (step % interval != 0) return;
+
+    std::string filename =
+            (run_dir_ / "frames" /
+             ("frame_" + std::to_string(step) + ".png")).string();
+
+    if (!FRenderer.getImage().saveToFile(filename)) {
+        std::cerr << "Failed to save image\n";
     }
 }
