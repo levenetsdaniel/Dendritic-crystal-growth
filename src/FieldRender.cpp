@@ -40,3 +40,8 @@ void FieldRenderer::render(const PhaseField &field) {
     window.draw(sprite);
     window.display();
 }
+
+const sf::Image& FieldRenderer::getImage() const
+{
+    return image;
+}

@@ -3,6 +3,13 @@
 #include "Field.h"
 #include "MaterialsParametrs.h"
 #include <vector>
+#include "TemperatureField.h"
+#include <cmath>
+#include <random>
+#include <chrono>
+#include <thread>
+#include <algorithm>
+#include <omp.h>
 
 class TemperatureField;
 

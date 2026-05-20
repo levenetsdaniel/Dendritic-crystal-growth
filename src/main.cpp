@@ -2,8 +2,12 @@
 #include "MaterialsLibrary.h"
 #include "PhaseField.h"
 #include "TemperatureField.h"
+#include "Metrics.h"
 #include <iostream>
 #include <string>
+
+
+
 
 int main(int argc, char* argv[]) {
     std::cout << "╔═══════════════════════════════════════════════════════════╗\n"
@@ -26,6 +30,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+
     const uint64_t N = 1600;
 
     std::cout << "Initializing simulation...\n"
@@ -44,6 +49,8 @@ int main(int argc, char* argv[]) {
     std::cout << "Seed initialized\nStarting visualization...\n\n";
 
     FieldRenderer renderer(N, N, 0.5f);
+
+    Metrics m(p);
 
     uint64_t frame = 0;
 
@@ -71,6 +78,10 @@ int main(int argc, char* argv[]) {
                       << " | u(c+20)=" << Tfield.at(cx + 20, cy)
                       << std::endl;
         }
+
+        // сохранение метрик
+        m.record(frame, 100, field, Tfield);
+        m.saveImage(frame, 500, renderer);
 
         frame++;
     }

@@ -10,7 +10,9 @@ find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
 
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(crystal ${SOURCES})
+add_executable(crystal ${SOURCES}
+        include/Metrics.h
+        src/Metrics.cpp)
 
 target_include_directories(crystal PRIVATE include)
 

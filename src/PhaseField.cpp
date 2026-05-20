@@ -1,11 +1,5 @@
 #include "PhaseField.h"
-#include "TemperatureField.h"
-#include <cmath>
-#include <random>
-#include <chrono>
-#include <thread>
-#include <algorithm>
-#include <omp.h>
+
 
 PhaseField::PhaseField(const Parameters& par, uint64_t nx, uint64_t ny, float initValue)
         : Field(par, nx, ny, initValue),
