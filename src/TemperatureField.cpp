@@ -37,7 +37,6 @@ void TemperatureField::updataeTemperatureField(double dt, const PhaseField& p_fi
     for (uint64_t i = 1; i < nx - 1; ++i) {
         for (uint64_t j = 1; j < ny - 1; ++j) {
 
-            // --- Диффузия: считается везде ---
             const float uC = prev_data[index(i,   j  )];
             const float uE = prev_data[index(i+1, j  )];
             const float uW = prev_data[index(i-1, j  )];
@@ -45,12 +44,10 @@ void TemperatureField::updataeTemperatureField(double dt, const PhaseField& p_fi
             const float uS = prev_data[index(i,   j-1)];
             const float lap_u = (uE + uW + uN + uS - 4.0f * uC) * inv_h2;
 
-            // Анти-трапинг
             const float phiC = p_field.prev_at(i, j);
             float source = 0.0f;
 
             if (std::abs(phiC) < BAND_THRESHOLD) {
-                // В полосе считаем полный источниковый член
                 const float phiE  = p_field.prev_at(i+1, j  );
                 const float phiW  = p_field.prev_at(i-1, j  );
                 const float phiN  = p_field.prev_at(i,   j+1);
@@ -60,7 +57,6 @@ void TemperatureField::updataeTemperatureField(double dt, const PhaseField& p_fi
                 const float phiSE = p_field.prev_at(i+1, j-1);
                 const float phiSW = p_field.prev_at(i-1, j-1);
 
-                // ∂φ/∂t в центре и на соседях (для интерполяции на гранях)
                 const float fdt_inv = 1.0f / fdt;
                 const float dpC = (p_field.at(i,   j  ) - phiC ) * fdt_inv;
                 const float dpE = (p_field.at(i+1, j  ) - phiE ) * fdt_inv;
@@ -68,7 +64,6 @@ void TemperatureField::updataeTemperatureField(double dt, const PhaseField& p_fi
                 const float dpN = (p_field.at(i,   j+1) - phiN ) * fdt_inv;
                 const float dpS = (p_field.at(i,   j-1) - phiS ) * fdt_inv;
 
-                // Анти-трапинговый поток на грани:
                 auto j_face = [&](float phi_a, float phi_b,
                                   float dpdt_a, float dpdt_b,
                                   float d_normal, float d_tangent) -> float {
