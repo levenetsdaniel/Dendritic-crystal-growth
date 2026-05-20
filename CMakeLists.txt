@@ -22,14 +22,12 @@ target_link_libraries(crystal PRIVATE
 
 if(UNIX AND NOT APPLE)
     find_package(OpenMP REQUIRED)
-
     target_link_libraries(crystal PRIVATE OpenMP::OpenMP_CXX)
 endif()
 
 if(APPLE)
     set(OpenMP_INCLUDE_DIR "/opt/homebrew/opt/libomp/include")
     set(OpenMP_LIB "/opt/homebrew/opt/libomp/lib/libomp.dylib")
-
     target_compile_options(crystal PRIVATE -Xpreprocessor -fopenmp)
     target_include_directories(crystal PRIVATE ${OpenMP_INCLUDE_DIR})
     target_link_libraries(crystal PRIVATE ${OpenMP_LIB})

@@ -8,9 +8,9 @@ struct Parameters {
     double D = 1.27e-3; // термодиффузия в расплаве, см^2/с
     double d0 = 2.8e-7; // капиллярная длина, см
     double eps4 = 0.0055; // анизотропия поверхностного натяжения
-    double beta0 = 0.0; // кинетический коэф. ~ 0 для SCN
+    double beta0 = 0.0; // кинетический коэф. около 0 для SCN
 
-    double dT_unit() const { return L / c_p; } // ≈ 23.1 K
+    double dT_unit() const { return L / c_p; } // около 23.1 K
 
 
     double W0_over_d0 = 100.0; // ширина интерфейса в единицах d0

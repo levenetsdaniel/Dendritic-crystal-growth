@@ -3,12 +3,12 @@
 #include <algorithm>
 
 FieldRenderer::FieldRenderer(std::uint64_t nx, std::uint64_t ny, float scale)
-    : nx(nx), ny(ny), scale(scale),
-      window(sf::VideoMode({
-                 static_cast<unsigned>(nx * scale),
-                 static_cast<unsigned>(ny * scale)
-             }),
-             "Phase Field (Karma-Rappel)") {
+        : nx(nx), ny(ny), scale(scale),
+          window(sf::VideoMode({
+                                       static_cast<unsigned>(nx * scale),
+                                       static_cast<unsigned>(ny * scale)
+                               }),
+                 "Phase Field (Karma-Rappel)") {
     image.resize({static_cast<unsigned>(nx), static_cast<unsigned>(ny)}, sf::Color::Black);
     window.setFramerateLimit(60);
 }
@@ -22,20 +22,19 @@ void FieldRenderer::handleEvents() {
     }
 }
 
-void FieldRenderer::render(const PhaseField &field) {
+void FieldRenderer::render(const PhaseField& field) {
     for (std::uint64_t i = 0; i < nx; ++i) {
         for (std::uint64_t j = 0; j < ny; ++j) {
-            double phi = std::clamp(field.at(i, j), -1.0, 1.0);
-            // double brightness = 0.5 * (phi + 1.0);
-            std::uint8_t c = (phi > 0.0) ? 255 : 0;
+            const float phi = std::clamp(field.at(i, j), -1.0f, 1.0f);
+            const std::uint8_t c = (phi > 0.0f) ? 255 : 0;
             image.setPixel({static_cast<unsigned>(i), static_cast<unsigned>(j)},
                            sf::Color(c, c, c));
         }
     }
 
     sf::Texture texture(image);
-    sf::Sprite sprite(texture);
-    sprite.setScale({(float) scale, (float) scale});
+    sf::Sprite  sprite(texture);
+    sprite.setScale({scale, scale});
 
     window.clear();
     window.draw(sprite);
