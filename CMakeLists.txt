@@ -7,10 +7,13 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+find_package(nlohmann_json REQUIRED)
 
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(crystal ${SOURCES})
+add_executable(crystal ${SOURCES}
+        include/ConfigLoader.h
+        src/ConfigLoader.cpp)
 
 target_include_directories(crystal PRIVATE include)
 
@@ -18,6 +21,8 @@ target_link_libraries(crystal PRIVATE
         SFML::Graphics
         SFML::Window
         SFML::System
+        nlohmann_json::nlohmann_json
+
 )
 
 target_compile_definitions(crystal PRIVATE

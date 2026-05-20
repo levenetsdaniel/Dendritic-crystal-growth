@@ -2,6 +2,7 @@
 #include "MaterialsLibrary.h"
 #include "PhaseField.h"
 #include "TemperatureField.h"
+#include "ConfigLoader.h"
 #include "Metrics.h"
 #include <iostream>
 #include <string>
@@ -12,12 +13,26 @@
 
 int main(int argc, char* argv[]) {
     std::cout << "╔═══════════════════════════════════════════════════════════╗\n"
-              << "║     Karma-Rappel Phase Field Simulator                     ║\n"
-              << "║     Crystal Growth & Solidification Dynamics               ║\n"
+              << "║     Karma-Rappel Phase Field Simulator                    ║\n"
+              << "║     Crystal Growth & Solidification Dynamics              ║\n"
               << "╚═══════════════════════════════════════════════════════════╝\n\n";
 
-    std::string material_name = "SCN";
-    bool save_metrics = false;
+    // шедевро джсончики
+
+    std::string configPath =
+            "configs/default.json";
+
+    if (argc > 1) {
+        configPath = argv[1];
+    }
+
+    SimulationConfig cfg =
+            ConfigLoader::load(configPath);
+
+    // шедевро джсончики закончились
+
+    std::string material_name = cfg.material;
+    bool save_metrics = cfg.save_metrics;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -57,7 +72,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    const uint64_t N = 1600;
+    const uint64_t N = cfg.grid_size;
 
     std::cout << "Initializing simulation...\n"
               << "  Grid size: " << N << " × " << N << " nodes\n"
@@ -74,7 +89,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Seed initialized\nStarting visualization...\n\n";
 
-    FieldRenderer renderer(N, N, 0.5f);
+    FieldRenderer renderer(N, N, cfg.render_scale);
 
     if (material_name == "ICE" || material_name == "ice" || material_name == "water") {
         renderer.setColorMode(FieldRenderer::ColorMode::ICE_BLUE);
@@ -96,8 +111,8 @@ int main(int argc, char* argv[]) {
     uint64_t frame = 0;
 
     std::cout << "╔═══════════════════════════════════════════════════════════╗\n"
-              << "║                   SIMULATION RUNNING                       ║\n"
-              << "║  Close window to stop                                      ║\n"
+              << "║                   SIMULATION RUNNING                      ║\n"
+              << "║  Close window to stop                                     ║\n"
               << "╚═══════════════════════════════════════════════════════════╝\n\n";
 
     while (renderer.isOpen()) {
@@ -107,11 +122,11 @@ int main(int argc, char* argv[]) {
         field.UpdateField(dt, Tfield);
         Tfield.updataeTemperatureField(dt, field);
 
-        if (frame % 5 == 0) {
+        if (frame % cfg.interval_render == 0) {
             renderer.render(field, Tfield);
         }
 
-        if (frame % 1000 == 0 && frame > 0) {
+        if (frame % cfg.interval_ostream == 0 && frame > 0) {
             uint64_t cx = N / 2, cy = N / 2;
             std::cout << "Frame " << frame
                       << " | phi(c+30)=" << field.at(cx + 30, cy)
@@ -121,16 +136,16 @@ int main(int argc, char* argv[]) {
         }
 
         if (save_metrics && m) {
-            m->record(frame, 100, field, Tfield);
-            m->saveImage(frame, 500, renderer);
+            m->record(frame, cfg.interval_csv, field, Tfield);
+            m->saveImage(frame, cfg.interval_snapshot, renderer);
         }
 
         frame++;
     }
 
     std::cout << "\n╔═══════════════════════════════════════════════════════════╗\n"
-              << "║                  SIMULATION COMPLETED                      ║\n"
-              << "╚═══════════════════════════════════════════════════════════╝\n\n";
+              <<   "║                  SIMULATION COMPLETED                     ║\n"
+              <<   "╚═══════════════════════════════════════════════════════════╝\n\n";
 
     return 0;
 }

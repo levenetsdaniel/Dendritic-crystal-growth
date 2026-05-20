@@ -1,0 +1,16 @@
+{
+  "material": "SCN",
+
+  "grid_size": 1600,
+
+  "seed_radius": 10.0,
+
+  "render_scale": 0.5,
+
+  "interval_render": 5,
+  "interval_csv": 100,
+  "interval_snapshot": 500,
+  "interval_ostream": 1000,
+
+  "save_metrics": true
+}

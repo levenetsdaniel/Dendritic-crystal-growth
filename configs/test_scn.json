@@ -1,0 +1,11 @@
+{
+  "material": "SCN",
+
+  "grid_size": 512,
+
+  "render_every": 1,
+  "metrics_every": 20,
+  "snapshot_every": 100,
+
+  "seed_radius": 8.0
+}
