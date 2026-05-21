@@ -19,49 +19,52 @@ int main(int argc, char* argv[]) {
               << "║     Crystal Growth & Solidification Dynamics              ║\n"
               << "╚═══════════════════════════════════════════════════════════╝\n\n";
 
-    // шедевро джсончики
+    std::string configPath = "configs/default.json";
+    std::string material_name = "SCN";
+    bool save_metrics = false;
+    bool resume_flag = false;
 
-    std::string configPath =
-            "configs/default.json";
-
-    if (argc > 1 && std::string(argv[1]) != "--resume") {
-        configPath = argv[1];
-    }
-
-
-    SimulationConfig cfg =
-            ConfigLoader::load(configPath);
-
-    // шедевро джсончики закончились
-
-    std::string material_name = cfg.material;
-    bool save_metrics = cfg.save_metrics;
-
+    // парсинг это самое скучное что придумало человечество
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--material" && i + 1 < argc) {
             material_name = argv[++i];
         } else if (arg == "-m" && i + 1 < argc) {
             material_name = argv[++i];
+        } else if (arg == "--config" && i + 1 < argc) {
+            configPath = argv[++i];
         } else if (arg == "--no-metrics") {
             save_metrics = false;
         } else if (arg == "--with-metrics") {
             save_metrics = true;
+        } else if (arg == "--resume") {
+            resume_flag = true;
         } else if (arg == "-h" || arg == "--help") {
-            std::cout << "Usage: crystal [OPTIONS]\n\n"
+            std::cout << "Usage: crystal [OPTIONS] [MATERIAL]\n\n"
                       << "Options:\n"
-                      << "  -m, --material NAME       Select material (default: SCN)\n"
-                      << "                            Available: SCN, SILVER, ALUMINUM_OXIDE, ICE, SILICON\n"
+                      << "  MATERIAL                  Material name as first argument (SCN, SILVER, ICE, etc)\n"
+                      << "  -m, --material NAME       Select material explicitly\n"
+                      << "  --config PATH             Path to config file\n"
                       << "  --with-metrics            Save metrics and frames\n"
                       << "  --no-metrics              Disable metrics and frame saving (default)\n"
+                      << "  --resume                  Resume from latest checkpoint\n"
                       << "  -h, --help                Show this help message\n"
                       << "\nExamples:\n"
                       << "  crystal                          # SCN without metrics\n"
-                      << "  crystal -m SILVER                # Silver without metrics\n"
-                      << "  crystal --material ICE --with-metrics\n"
-                      << "  --resume                  Resume from latest checkpoint\n";
+                      << "  crystal ICE                      # Ice without metrics\n"
+                      << "  crystal SILVER --with-metrics    # Silver with metrics\n"
+                      << "  crystal -m ALUMINUM_OXIDE        # Using -m flag\n"
+                      << "  crystal --resume                 # Resume from checkpoint\n";
             return 0;
+        } else if (arg[0] != '-' && material_name == "SCN") {
+            material_name = arg;
         }
+    }
+
+    SimulationConfig cfg = ConfigLoader::load(configPath);
+
+    if (save_metrics == false && cfg.save_metrics == true) {
+        save_metrics = cfg.save_metrics;
     }
 
     Parameters p;
@@ -94,12 +97,6 @@ int main(int argc, char* argv[]) {
     uint64_t frame = 0;
 
     std::string ckpt_dir = std::string(PROJECT_ROOT_DIR) + "/checkpoints";
-    bool resume_flag = false;
-    for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]) == "--resume") {
-            resume_flag = true;
-        }
-    }
     if (resume_flag) {
         std::string ckpt = Checkpoint::latest(ckpt_dir);
         if (!ckpt.empty()) {
