@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <algorithm>
 
-// имя файла checkpoint.
 
 std::string Checkpoint::makeFilename(const std::string& dir, uint64_t frame) {
     char buf[32];
@@ -16,7 +15,6 @@ std::string Checkpoint::makeFilename(const std::string& dir, uint64_t frame) {
     return (std::filesystem::path(dir) / buf).string();
 }
 
-//  сериализует оба поля в бинарный файл
 void Checkpoint::save(const std::string&      dir,
                       uint64_t                frame,
                       const PhaseField&       phi,
@@ -60,7 +58,6 @@ void Checkpoint::save(const std::string&      dir,
               << " МБ)\n";
 }
 
-// десериализует поля из файла
 bool Checkpoint::load(const std::string& path,
                       uint64_t&          frame,
                       PhaseField&        phi,
@@ -142,7 +139,6 @@ std::string Checkpoint::latest(const std::string& dir) {
     return best;
 }
 
-// выводит метаданные без чтения полей.
 void Checkpoint::printInfo(const std::string& path) {
     std::ifstream in(path, std::ios::binary);
     if (!in) { std::cerr << "Не удалось открыть: " << path << "\n"; return; }
