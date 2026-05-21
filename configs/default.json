@@ -11,6 +11,6 @@
   "interval_csv": 100,
   "interval_snapshot": 500,
   "interval_ostream": 1000,
-
+  "interval_checkpoint": 5000,
   "save_metrics": true
 }

@@ -13,7 +13,11 @@ file(GLOB SOURCES "src/*.cpp")
 
 add_executable(crystal ${SOURCES}
         include/ConfigLoader.h
-        src/ConfigLoader.cpp)
+        src/ConfigLoader.cpp
+        include/Statistics.h
+        src/Statistics.cpp
+        include/Checkpoint.h
+        src/Checkpoint.cpp)
 
 target_include_directories(crystal PRIVATE include)
 

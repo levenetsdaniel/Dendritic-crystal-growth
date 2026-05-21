@@ -18,7 +18,7 @@ struct SimulationConfig
     int interval_csv;
     int interval_snapshot;
     int interval_ostream;
-
+    int interval_checkpoint;
     bool save_metrics;
 };
 

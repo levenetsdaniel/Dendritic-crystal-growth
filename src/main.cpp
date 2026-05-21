@@ -4,6 +4,8 @@
 #include "TemperatureField.h"
 #include "ConfigLoader.h"
 #include "Metrics.h"
+#include "Checkpoint.h"
+#include "Statistics.h"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -22,9 +24,10 @@ int main(int argc, char* argv[]) {
     std::string configPath =
             "configs/default.json";
 
-    if (argc > 1) {
+    if (argc > 1 && std::string(argv[1]) != "--resume") {
         configPath = argv[1];
     }
+
 
     SimulationConfig cfg =
             ConfigLoader::load(configPath);
@@ -55,7 +58,8 @@ int main(int argc, char* argv[]) {
                       << "\nExamples:\n"
                       << "  crystal                          # SCN without metrics\n"
                       << "  crystal -m SILVER                # Silver without metrics\n"
-                      << "  crystal --material ICE --with-metrics\n";
+                      << "  crystal --material ICE --with-metrics\n"
+                      << "  --resume                  Resume from latest checkpoint\n";
             return 0;
         }
     }
@@ -87,6 +91,25 @@ int main(int argc, char* argv[]) {
     TemperatureField Tfield(p, N, N);
     field.initializeSeed(N / 2, N / 2, 10.0, Tfield);
 
+    uint64_t frame = 0;
+
+    std::string ckpt_dir = std::string(PROJECT_ROOT_DIR) + "/checkpoints";
+    bool resume_flag = false;
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--resume") {
+            resume_flag = true;
+        }
+    }
+    if (resume_flag) {
+        std::string ckpt = Checkpoint::latest(ckpt_dir);
+        if (!ckpt.empty()) {
+            Checkpoint::load(ckpt, frame, field, Tfield);
+            std::cout << "✓ Resumed from checkpoint, frame " << frame << "\n\n";
+        } else {
+            std::cout << "✗ No checkpoints found in " << ckpt_dir << "\n\n";
+        }
+    }
+
     std::cout << "Seed initialized\nStarting visualization...\n\n";
 
     FieldRenderer renderer(N, N, cfg.render_scale);
@@ -108,7 +131,6 @@ int main(int argc, char* argv[]) {
         m = std::make_unique<Metrics>(p);
     }
 
-    uint64_t frame = 0;
 
     std::cout << "╔═══════════════════════════════════════════════════════════╗\n"
               << "║                   SIMULATION RUNNING                      ║\n"
@@ -138,10 +160,18 @@ int main(int argc, char* argv[]) {
         if (save_metrics && m) {
             m->record(frame, cfg.interval_csv, field, Tfield);
             m->saveImage(frame, cfg.interval_snapshot, renderer);
+            if (frame % cfg.interval_checkpoint == 0 && frame > 0)
+                Checkpoint::save(ckpt_dir, frame, field, Tfield);
         }
 
         frame++;
     }
+
+    Statistics stat(field, N / 2, N / 2);
+    stat.compute();
+    stat.printReport();
+    if (save_metrics)
+        stat.saveToCsv(std::string(PROJECT_ROOT_DIR) + "/runs/final_statistics.csv");
 
     std::cout << "\n╔═══════════════════════════════════════════════════════════╗\n"
               <<   "║                  SIMULATION COMPLETED                     ║\n"

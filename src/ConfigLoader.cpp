@@ -50,6 +50,9 @@ SimulationConfig ConfigLoader::load(
     cfg.interval_ostream =
             j.value("interval_ostream", 1000);
 
+    cfg.interval_checkpoint =
+            j.value("interval_checkpoint", 5000);
+
     cfg.save_metrics =
             j.value("save_metrics", true);
 

@@ -19,6 +19,9 @@ public:
     void set (uint64_t x, uint64_t y, float value);
     void fill(float value);
     void swap(const Field& other);
+
+    const std::vector<float>& rawData() const { return data; }
+    void loadData(const std::vector<float>& d) { data = d; prev_data = d; }
 };
 
 #endif // CRYSTAL_FIELD_H
